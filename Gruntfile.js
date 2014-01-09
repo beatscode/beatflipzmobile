@@ -44,7 +44,7 @@ module.exports = function (grunt) {
       },
       minify: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        tasks: ['concat:dev', 'uglify:dev']
+        tasks: ['concat:dev', 'uglify:dev', 'karma']
       },
       gruntfile: {
         files: ['Gruntfile.js']
