@@ -31,7 +31,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
         options: {
-          livereload: true
+          livereload: false
         }
       },
       jsTest: {
@@ -42,19 +42,24 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
       },
+      minify: {
+        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        tasks: ['concat:dev', 'uglify:dev']
+      },
       gruntfile: {
         files: ['Gruntfile.js']
-      },
-      livereload: {
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        },
-        files: [
-          '<%= yeoman.app %>/{,*/}*.html',
-          '.tmp/styles/{,*/}*.css',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ]
       }
+      //,
+      // livereload: {
+      //   options: {
+      //     livereload: '<%= connect.options.livereload %>'
+      //   },
+      //   files: [
+      //     '<%= yeoman.app %>/{,*/}*.html',
+      //     '.tmp/styles/{,*/}*.css',
+      //     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+      //   ]
+      // }
     },
 
     // The actual grunt server settings
@@ -254,6 +259,7 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'bower_components/**/*',
+            'scripts/script.js',
             'images/{,*/}*.{webp}',
             'fonts/*'
           ]
@@ -290,28 +296,54 @@ module.exports = function (grunt) {
     // By default, your `index.html`'s <!-- Usemin block --> will take care of
     // minification. These next options are pre-configured if you do not wish
     // to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/styles/main.css': [
-    //         '.tmp/styles/{,*/}*.css',
-    //         '<%= yeoman.app %>/styles/{,*/}*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
+    cssmin: {
+      dist: {
+        files: {
+          '<%= yeoman.dist %>/styles/main.css': [
+            '.tmp/styles/{,*/}*.css',
+            '<%= yeoman.app %>/styles/{,*/}*.css'
+          ]
+        }
+      }
+    },
+    uglify: {
+      dev: {
+        files: {
+          '<%= yeoman.dist %>/scripts/scripts.js': [
+            '<%= yeoman.app %>/scripts/scripts.js'
+          ]
+        }
+      },
+      dist: {
+        files: {
+          '<%= yeoman.dist %>/scripts/scripts.js': [
+            '<%= yeoman.app %>/scripts/scripts.js'
+          ]
+        }
+      }
+    },
+    concat: {
+      dev: {
+        files: {
+          '<%= yeoman.app %>/scripts/scripts.js': [
+            '<%= yeoman.app %>/scripts/app.js',
+            '<%= yeoman.app %>/scripts/controllers/*.js',
+            '<%= yeoman.app %>/scripts/filters/*.js',
+            '<%= yeoman.app %>/scripts/services/*.js'
+          ]
+        }
+      },
+      dist: {
+        files: {
+          '<%= yeoman.dist %>/scripts/scripts.js': [
+            '<%= yeoman.app %>/scripts/app.js',
+            '<%= yeoman.app %>/scripts/controllers/*.js',
+            '<%= yeoman.app %>/scripts/filters/*.js',
+            '<%= yeoman.app %>/scripts/services/*.js'
+          ]
+        }
+      }
+    },
 
     // Test settings
     karma: {
@@ -354,18 +386,18 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'bower-install',
-    'useminPrepare',
+    // 'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'concat',
+    'concat:dist',
     'ngmin',
-    'copy:dist',
     'cdnify',
     'cssmin',
-    'uglify',
-    'rev',
-    'usemin',
-    'htmlmin'
+    'uglify:dist',
+    //'rev',
+    //'usemin',
+    'htmlmin',
+    'copy:dist'
   ]);
 
   grunt.registerTask('default', [

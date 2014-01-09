@@ -1,0 +1,23 @@
+<div class="bar bar-header bar-dark" >
+	<span class="background_header">	
+    <a href="#/home" class="button button-positive">Back</a>
+  	<h1 class="title">Tags</h1>
+  	 <button class="button button-positive" ng-click="saveTags()">Save</button>
+	</span>
+</div>
+<content has-header="true" padded="true">
+
+	<div class="list">
+		<div class="item item-checkbox">
+			<h2>Select Tags</h2>
+			<p>BeatFlipz will send you tracks thats match your tags</p>
+		</div>
+		<div ng-repeat="tag in tags" class="item item-checkbox">
+		  <h2>{{tag.tag | uppercase }}</h2>
+		  <p> {{tag.numemails}} like <i class="icon ion-thumbsup"></i> {{tag.tag}} </p>
+	 		<label class="checkbox">
+	       		<input type="checkbox" name="tags" ng-model="sTags[tag.tag]" value="{{tag.tag}}" ng-true-value="true" ng-false-value="false">
+	    	</label>
+		</div>
+	</div>
+</content>

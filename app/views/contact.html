@@ -1,0 +1,24 @@
+<div class="bar bar-header bar-dark" >
+	<span class="background_header">	
+    <a href="#/home" class="button button-positive">Back</a>
+  	<h1 class="title">Contacts</h1>
+	</span>
+</div>
+<content has-header="true" has-footer="false" padded="true">
+	<div class="item item-input-inset">
+	    <label class="item-input-wrapper">
+	      <input type="text" ng-model="search" id="" placeholder="Search...">
+	   	</label>
+	    <button class="button button-small" ng-click="search=''">Cancel</button>
+    </div>
+	<div class="list">
+		<div ng-repeat="contact in contacts | filter:search" class="item item-avatar">
+		  <img ng-src="{{contact.img_url}}" alt="">
+		  <h2>{{contact.email}}</h2>
+		  <p><i class="icon ion-thumbsup"></i> like {{contact.tag}} beats <br>
+		  	{{contact.timeago}}<br>			
+		  </p>
+		  {{contact.tweet}}
+		</div>
+	</div>
+</content>
