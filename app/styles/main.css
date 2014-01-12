@@ -1,16 +1,16 @@
 body{
-  background-image: url('../images/mobile_bkgd.png');
+  background-image: url('../images/mobile_background_640x960.png');
+  background-repeat: repeat-x;
 }
 .background_header{
-  background-image: url('../images/navbar@2x.png');
-  z-index: 1000;
-  width:102%;
+  background-image: url('../images/navbar-2x.png');
+  width:100%;
   height:45px;
-
   margin-top:-4px;
   padding:4px;
   top:0;
   left:0;
+  display:block;
 }
 .bar{
   background: none !important;

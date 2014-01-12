@@ -7,7 +7,7 @@ angular.module('beatflipzApp', [
 	'ngTouch',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
-	'ionic.ui.content'
+	'ionic'
 ]).
 config(['$routeProvider', '$httpProvider',
 	function ($routeProvider, $httpProvider) {

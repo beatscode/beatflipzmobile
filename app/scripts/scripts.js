@@ -7,7 +7,7 @@ angular.module('beatflipzApp', [
 	'ngTouch',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
-	'ionic.ui.content'
+	'ionic'
 ]).
 config(['$routeProvider', '$httpProvider',
 	function ($routeProvider, $httpProvider) {
@@ -46,18 +46,18 @@ config(['$routeProvider', '$httpProvider',
 
 /* Controllers */
 
-angular.module('beatflipzApp.controllers', []).
-controller('NavigationCtrl', ['$rootScope', '$scope',
-	function ($rootScope, $scope) {
-		$scope.back = function () {
-			console.log("back");
-		};
+angular.module('beatflipzApp.controllers', [])
+	.controller('NavigationCtrl', ['$rootScope', '$scope',
+		function ($rootScope, $scope) {
+			$scope.back = function () {
+				console.log("back");
+			};
 
-		$scope.next = function () {
-			console.log("next");
+			$scope.next = function () {
+				console.log("next");
+			}
 		}
-	}
-])
+	])
 	.controller('HomeCtrl', ['$scope', 'environment',
 		function ($scope, environment) {
 
@@ -79,7 +79,7 @@ controller('NavigationCtrl', ['$rootScope', '$scope',
 
 			$scope.getServerTags = function () {
 				tagService.refresh().then(function (serverTags) {
-					console.log(serverTags);
+					//console.log(serverTags);
 					$scope.tags = serverTags;
 					$scope.setUserTagsOn(serverTags);
 
@@ -90,16 +90,22 @@ controller('NavigationCtrl', ['$rootScope', '$scope',
 			};
 
 			$scope.saveTags = function () {
-				console.log($scope.sTags, $rootScope.user);
+				console.log($scope.sTags, $rootScope.user, $scope.sTags);
 				var tags_to_save = [];
 				for (var x in $scope.sTags) {
-					if ($scope.sTags[x] === true) {
+					if ($scope.sTags[x] === "true") {
 						tags_to_save.push(x);
 					}
 				}
 				if (tags_to_save.length > 0) {
 					tagService.saveTags($rootScope.user.user.id, tags_to_save).then(function (data) {
-						alert("Tags Saved\nYou'll recieve");
+						var msg;
+						if ($rootScope.user.type == "artist") {
+							msg = "Tags Saved!\nYou'll recieve music based on your tags shortly";
+						} else {
+							msg = "Tags Saved!";
+						}
+						alert(msg);
 					}, function (err) {
 						alert(err);
 					});
@@ -109,6 +115,7 @@ controller('NavigationCtrl', ['$rootScope', '$scope',
 			$scope.init = (function () {
 				if (userService.attempt()) {
 					$scope.getServerTags();
+					$scope.user = $rootScope.user.user;
 				} else {
 					$location.path('/');
 				}
