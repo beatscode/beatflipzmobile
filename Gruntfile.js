@@ -356,6 +356,11 @@ module.exports = function (grunt) {
     run: {
       copyandroidsplashandicons: {
         cmd: './android_splash.sh',
+      },
+      'ant_release': {
+        commands: {
+          exec: 'cd platforms/android && ant release',
+        }
       }
     }
   });
