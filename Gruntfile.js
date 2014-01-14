@@ -351,6 +351,12 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         singleRun: true
       }
+    },
+
+    run: {
+      copyandroidsplashandicons: {
+        cmd: './android_splash.sh',
+      }
     }
   });
 
@@ -397,7 +403,8 @@ module.exports = function (grunt) {
     //'rev',
     //'usemin',
     'htmlmin',
-    'copy:dist'
+    'copy:dist',
+    'run:copyandroidsplashandicons'
   ]);
 
   grunt.registerTask('default', [
@@ -406,4 +413,5 @@ module.exports = function (grunt) {
     'build'
   ]);
   grunt.loadNpmTasks("grunt-angular-phonegap");
+  grunt.loadNpmTasks("grunt-run");
 };

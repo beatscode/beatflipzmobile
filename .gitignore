@@ -3,6 +3,7 @@ dist
 .tmp
 .sass-cache
 app/bower_components
+.DS_Store
 
 platforms
 www
