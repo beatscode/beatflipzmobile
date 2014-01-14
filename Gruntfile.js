@@ -412,6 +412,10 @@ module.exports = function (grunt) {
     'run:copyandroidsplashandicons'
   ]);
 
+  grunt.registerTask('release', [
+    'run:ant_release'
+  ]);
+
   grunt.registerTask('default', [
     'newer:jshint',
     'test',
