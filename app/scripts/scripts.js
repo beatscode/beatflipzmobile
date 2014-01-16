@@ -76,6 +76,7 @@ angular.module('beatflipzApp.controllers', [])
 						$scope.sTags[serverTags[i].tag] = true;
 					}
 				}
+					window.console.log($scope.sTags);
 			}
 
 			$scope.getServerTags = function () {
@@ -90,11 +91,23 @@ angular.module('beatflipzApp.controllers', [])
 				});
 			};
 
+			$scope.checkUserTag = function(tag) {  				
+  				return $scope.sTags && $scope.sTags.hasOwnProperty(tag);
+  			};
+
+  			$scope.selectTag = function(tag) {
+  				$scope.sTags[tag] = true;
+ 			}
+
+ 			$scope.deselectTag =  function(tag) {
+  				delete $scope.sTags[tag];
+  			}
+
 			$scope.saveTags = function () {
-				console.log($scope.sTags, $rootScope.user, $scope.sTags);
-				var tags_to_save = [];
+				var tags_to_save = [],new_user_array = [];
+
 				for (var x in $scope.sTags) {
-					if ($scope.sTags[x] === "true") {
+					if ($scope.sTags[x] === true) {
 						tags_to_save.push(x);
 					}
 				}
@@ -106,6 +119,10 @@ angular.module('beatflipzApp.controllers', [])
 						} else {
 							msg = "Tags Saved!";
 						}
+						
+						//Save user to persistence layer
+						$rootScope.user.tags = tags_to_save;
+						userService.setUser($rootScope.user);					
 						alert(msg);
 					}, function (err) {
 						alert(err);

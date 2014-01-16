@@ -14,16 +14,20 @@
 			<h2>Select Tags</h2>
 			<p ng-show="user.type=='artist'">BeatFlipz will send you tracks thats match your tags</p>
 			<p ng-show="user.type=='producer'">BeatFlipz will match you with artists based on your tags</p>
-			<span class="item-note">
-		     	Hint: Press down on tag for a moment to select
-		    </span>
 		</div>
-		<div ng-repeat="tag in tags" class="item item-checkbox">
+		<div ng-repeat="tag in tags" class="item item-button-right">
 		  <h2>{{tag.tag | uppercase }}</h2>
 		  <p> {{tag.numemails}} artists <i class="icon ion-thumbsup"></i> {{tag.tag}} </p>
-	 		<label class="checkbox">
+	 		<!-- <label class="checkbox">
 	       		<input type="checkbox" name="tags" ng-model="sTags[tag.tag]" value="{{tag.tag}}" ng-true-value="true" ng-false-value="false">
-	    	</label>
+	    	</label> -->
+
+		    <button class="button button-light" ng-show="checkUserTag(tag.tag)" ng-click="deselectTag(tag.tag)">
+		      <i class="icon ion-heart"></i>
+		    </button>	
+		    <button class="button" ng-show="!sTags.hasOwnProperty(tag.tag)" ng-click="selectTag(tag.tag)">
+		      <i class="icon ion-ios7-plus-outline"></i>
+		    </button>
 		</div>
 	</div>
 </content>
