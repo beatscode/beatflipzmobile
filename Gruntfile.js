@@ -359,7 +359,7 @@ module.exports = function (grunt) {
       },
       'ant_release': {
         commands: {
-          exec: 'cd platforms/android && ant release',
+          exec: 'cd /Users/acasanova/projects/BeatFlipz/platforms/android && /usr/local/bin/ant release',
         }
       }
     }

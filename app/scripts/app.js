@@ -1,6 +1,4 @@
 'use strict';
-
-
 // Declare app level module which depends on filters, and services
 angular.module('beatflipzApp', [
 	'ngRoute',
@@ -9,6 +7,9 @@ angular.module('beatflipzApp', [
 	'beatflipzApp.controllers',
 	'ionic'
 ]).
+run(function () {
+	FastClick.attach(document.body);
+}).
 config(['$routeProvider', '$httpProvider',
 	function ($routeProvider, $httpProvider) {
 		$routeProvider.when('/login', {
