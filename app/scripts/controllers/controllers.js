@@ -14,10 +14,13 @@ angular.module('beatflipzApp.controllers', [])
 			}
 		}
 	])
-	.controller('HomeCtrl', ['$scope', 'environment',
-		function ($scope, environment) {
+	.controller('HomeCtrl', ['$scope', 'environment','userService','$location',
+		function ($scope, environment,userService, $location) {
 
-
+			//Check whether user object exists
+			if (userService.attempt() === false) {
+				$location.path('/login');
+			}
 
 		}
 	])
@@ -31,7 +34,6 @@ angular.module('beatflipzApp.controllers', [])
 						$scope.sTags[serverTags[i].tag] = true;
 					}
 				}
-					window.console.log($scope.sTags);
 			}
 
 			$scope.getServerTags = function () {
@@ -74,7 +76,7 @@ angular.module('beatflipzApp.controllers', [])
 						} else {
 							msg = "Tags Saved!";
 						}
-						
+
 						//Save user to persistence layer
 						$rootScope.user.tags = tags_to_save;
 						userService.setUser($rootScope.user);					
@@ -116,6 +118,11 @@ angular.module('beatflipzApp.controllers', [])
 			};
 
 			$scope.init = (function () {
+
+				if(userService.attempt()){
+					$location.path("/home");
+				}				
+
 				$scope.error = false;
 			})();
 		}
