@@ -44,7 +44,7 @@ module.exports = function (grunt) {
       },
       minify: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        tasks: ['concat:dev', 'uglify:dev', 'karma']
+        tasks: ['concat:dev', 'concat:libraries', 'uglify:dev', 'karma', 'copy:ionic_css']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -260,6 +260,8 @@ module.exports = function (grunt) {
             'views/{,*/}*.html',
             'bower_components/**/*',
             'scripts/script.js',
+            'scripts/libraries.js',
+            'styles/**',
             'images/{,*/}*.{webp}',
             'fonts/*'
           ]
@@ -275,6 +277,12 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      ionic_css: {
+        expand: true,
+        cwd: '<%= yeoman.app %>/bower_components/ionic',
+        src: ['dist/css/ionic.min.css', 'dist/fonts/*'],
+        dest: '<%= yeoman.app %>/styles/ionic'
       }
     },
 
@@ -342,6 +350,21 @@ module.exports = function (grunt) {
             '<%= yeoman.app %>/scripts/services/*.js'
           ]
         }
+      },
+      libraries: {
+        files: {
+          '<%= yeoman.app %>/scripts/libraries.js': [
+            '<%= yeoman.app %>/bower_components/fastclick/lib/fastclick.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/ionic.min.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-animate.min.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-route.min.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-touch.min.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-sanitize.min.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular-ui/angular-ui-router.min.js',
+            '<%= yeoman.app %>/bower_components/ionic/dist/js/ionic-angular.min.js',
+          ]
+        }
       }
     },
 
@@ -407,6 +430,7 @@ module.exports = function (grunt) {
     'uglify:dist',
     //'rev',
     //'usemin',
+    'copy:ionic_css',
     'htmlmin',
     'copy:dist',
     'run:copyandroidsplashandicons'

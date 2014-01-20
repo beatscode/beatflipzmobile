@@ -14,6 +14,7 @@ module.exports = function (config) {
       'app/bower_components/ionic/dist/js/ionic.js',
       'app/bower_components/ionic/dist/js/angular/angular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
+      'app/bower_components/fastclick/lib/fastclick.js',
       'app/bower_components/ionic/dist/js/angular/angular-animate.min.js',
       //'app/bower_components/ionic/dist/js/angular/angular-resource.js',
       //'app/bower_components/ionic/dist/js/angular/angular-cookies.js',

@@ -13,7 +13,25 @@ angular.module('beatflipzApp.services', [])
 		function ($rootScope, environment, $q, $http) {
 
 			var self = this;
+			self.shuffle = function (array) {
+				var currentIndex = array.length,
+					temporaryValue, randomIndex;
 
+				// While there remain elements to shuffle...
+				while (0 !== currentIndex) {
+
+					// Pick a remaining element...
+					randomIndex = Math.floor(Math.random() * currentIndex);
+					currentIndex -= 1;
+
+					// And swap it with the current element.
+					temporaryValue = array[currentIndex];
+					array[currentIndex] = array[randomIndex];
+					array[randomIndex] = temporaryValue;
+				}
+
+				return array;
+			}
 			self.refresh = function () {
 				var post = "";
 				var deferred = $q.defer();
@@ -27,6 +45,9 @@ angular.module('beatflipzApp.services', [])
 				} else {
 					$http.post(environment.api + '/mobile/getcontacts', post).success(function (data) {
 						if (data) {
+							var artists = data.artists;
+							var producers = data.producers;
+							data = self.shuffle(artists.concat(producers));
 							//Set Expiration 1 day in the future
 							var targetDate = new Date();
 							targetDate.setDate(targetDate.getDate() + 1);

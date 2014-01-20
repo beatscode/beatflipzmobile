@@ -3,6 +3,7 @@
 angular.module('beatflipzApp', [
 	'ngRoute',
 	'ngTouch',
+	'ngSanitize',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
 	'ionic'
@@ -10,8 +11,8 @@ angular.module('beatflipzApp', [
 run(function () {
 	FastClick.attach(document.body);
 }).
-config(['$routeProvider', '$httpProvider',
-	function ($routeProvider, $httpProvider) {
+config(['$routeProvider', '$httpProvider', '$sceProvider',
+	function ($routeProvider, $httpProvider, $sceProvider) {
 		$routeProvider.when('/login', {
 			templateUrl: 'views/login.html',
 			controller: 'LoginCtrl'
@@ -38,8 +39,12 @@ config(['$routeProvider', '$httpProvider',
 			controller: 'BeatFlipzAdCtrl'
 		});
 		$routeProvider.otherwise({
-			redirectTo: '/login'
+			redirectTo: '/register'
 		});
+
+
 		$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+		$sceProvider.enabled(false);
 	}
 ]);

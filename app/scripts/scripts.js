@@ -3,6 +3,7 @@
 angular.module('beatflipzApp', [
 	'ngRoute',
 	'ngTouch',
+	'ngSanitize',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
 	'ionic'
@@ -10,8 +11,8 @@ angular.module('beatflipzApp', [
 run(function () {
 	FastClick.attach(document.body);
 }).
-config(['$routeProvider', '$httpProvider',
-	function ($routeProvider, $httpProvider) {
+config(['$routeProvider', '$httpProvider', '$sceProvider',
+	function ($routeProvider, $httpProvider, $sceProvider) {
 		$routeProvider.when('/login', {
 			templateUrl: 'views/login.html',
 			controller: 'LoginCtrl'
@@ -38,9 +39,13 @@ config(['$routeProvider', '$httpProvider',
 			controller: 'BeatFlipzAdCtrl'
 		});
 		$routeProvider.otherwise({
-			redirectTo: '/login'
+			redirectTo: '/register'
 		});
+
+
 		$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+		$sceProvider.enabled(false);
 	}
 ]);
 'use strict';
@@ -59,12 +64,12 @@ angular.module('beatflipzApp.controllers', [])
 			}
 		}
 	])
-	.controller('HomeCtrl', ['$scope', 'environment','userService','$location',
-		function ($scope, environment,userService, $location) {
+	.controller('HomeCtrl', ['$scope', 'environment', 'userService', '$location',
+		function ($scope, environment, userService, $location) {
 
 			//Check whether user object exists
 			if (userService.attempt() === false) {
-				$location.path('/login');
+				$location.path('/register');
 			}
 
 		}
@@ -93,20 +98,21 @@ angular.module('beatflipzApp.controllers', [])
 				});
 			};
 
-			$scope.checkUserTag = function(tag) {  				
-  				return $scope.sTags && $scope.sTags.hasOwnProperty(tag);
-  			};
+			$scope.checkUserTag = function (tag) {
+				return $scope.sTags && $scope.sTags.hasOwnProperty(tag);
+			};
 
-  			$scope.selectTag = function(tag) {
-  				$scope.sTags[tag] = true;
- 			}
+			$scope.selectTag = function (tag) {
+				$scope.sTags[tag] = true;
+			}
 
- 			$scope.deselectTag =  function(tag) {
-  				delete $scope.sTags[tag];
-  			}
+			$scope.deselectTag = function (tag) {
+				delete $scope.sTags[tag];
+			}
 
 			$scope.saveTags = function () {
-				var tags_to_save = [],new_user_array = [];
+				var tags_to_save = [],
+					new_user_array = [];
 
 				for (var x in $scope.sTags) {
 					if ($scope.sTags[x] === true) {
@@ -124,7 +130,7 @@ angular.module('beatflipzApp.controllers', [])
 
 						//Save user to persistence layer
 						$rootScope.user.tags = tags_to_save;
-						userService.setUser($rootScope.user);					
+						userService.setUser($rootScope.user);
 						alert(msg);
 					}, function (err) {
 						alert(err);
@@ -156,7 +162,7 @@ angular.module('beatflipzApp.controllers', [])
 				$scope.error = false;
 				userService.authenticate($scope.loginModel).then(
 					function (data) {
-						$location.path('/home');
+						$location.path('/contacts');
 					}, function (err) {
 						$scope.error = err;
 					});
@@ -164,10 +170,9 @@ angular.module('beatflipzApp.controllers', [])
 
 			$scope.init = (function () {
 
-				if(userService.attempt()){
-					$location.path("/home");
-				}				
-
+				if (userService.attempt()) {
+					$location.path("/contacts");
+				}
 				$scope.error = false;
 			})();
 		}
@@ -219,6 +224,7 @@ angular.module('beatflipzApp.controllers', [])
 	function ($rootScope, $scope, environment, contactService, $location, userService) {
 
 		$scope.search = '';
+		$scope.showSearch = false;
 
 		$scope.getContacts = function () {
 
@@ -230,6 +236,28 @@ angular.module('beatflipzApp.controllers', [])
 				});
 
 		};
+
+		$scope.renderIframe = function (iframe) {
+
+			if (iframe) {
+				var testUrl = iframe.match(/'(http:.+)'/),
+					onlyUrl = testUrl && testUrl[1];
+				window.console.log(testUrl);
+			}
+			return iframe;
+		}
+
+		function getYouTubeLink(url) {
+			var isYouTube = RegExp(/\.youtube\.com.+v=([\w_\-]+)/i);
+			var r = isYouTube.exec(url);
+			if (r && r[1]) {
+				var video = 'http://www.youtube.com/v/' + url + '&hl=en&fs=1&';
+				var youtube = '<embed src="' + video + '" type="application/x-shockwave-flash"' +
+					' allowscriptaccess="always"' +
+					' allowfullscreen="true" width="90" height="60"></embed>';
+				return youtube;
+			}
+		}
 
 		//Show Contact Tweet
 		$scope.showContact = function (contact) {
@@ -301,7 +329,25 @@ angular.module('beatflipzApp.services', [])
 		function ($rootScope, environment, $q, $http) {
 
 			var self = this;
+			self.shuffle = function (array) {
+				var currentIndex = array.length,
+					temporaryValue, randomIndex;
 
+				// While there remain elements to shuffle...
+				while (0 !== currentIndex) {
+
+					// Pick a remaining element...
+					randomIndex = Math.floor(Math.random() * currentIndex);
+					currentIndex -= 1;
+
+					// And swap it with the current element.
+					temporaryValue = array[currentIndex];
+					array[currentIndex] = array[randomIndex];
+					array[randomIndex] = temporaryValue;
+				}
+
+				return array;
+			}
 			self.refresh = function () {
 				var post = "";
 				var deferred = $q.defer();
@@ -315,6 +361,9 @@ angular.module('beatflipzApp.services', [])
 				} else {
 					$http.post(environment.api + '/mobile/getcontacts', post).success(function (data) {
 						if (data) {
+							var artists = data.artists;
+							var producers = data.producers;
+							data = self.shuffle(artists.concat(producers));
 							//Set Expiration 1 day in the future
 							var targetDate = new Date();
 							targetDate.setDate(targetDate.getDate() + 1);

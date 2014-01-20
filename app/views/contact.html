@@ -1,20 +1,66 @@
 <div class="bar bar-header bar-dark" >
 	<span class="background_header">	
-    <a href="#/home" class="button button-positive"><i class="icon ion-ios7-arrow-back"></i> Back</a>
+    <a href="#/home" class="button button-positive"><i class="icon ion-ios7-arrow-back"></i> Menu</a>
   		<h1 class="title" style="margin-top:-9px;">  <img src="images/ic_launcher.png" style="left:0px;top:15px;position:relative;"
 	  alt="">&nbsp;BeatFlipz Contacts</h1>
-
+	<button class="button button-positive" ng-click="showSearch=!showSearch"><i class="icon ion-search"></i></button>
 	</span>
 
 </div>
-<content has-header="true" has-footer="false" padded="true">
-	<div class="item item-input-inset">
+ <div class="bar bar-subheader bar-dark" ng-show="showSearch">
+ 		<div class="item item-input-inset" ng-show="showSearch">
 	    <label class="item-input-wrapper">
 	      <input type="text" ng-model="search" id="" placeholder="Search...">
 	   	</label>
 	    <button class="button button-small" ng-click="search=''">Cancel</button>
-    </div>
-	<div class="list">
+    </div> 		
+</div>
+<content has-header="true" has-footer="false" padded="true">
+	
+    <div class="list card" ng-repeat="contact in contacts | filter:search" >
+    <span ng-show="contact.type == 'artist'">
+	  <div class="item item-avatar">
+	    <img ng-src="{{contact.img_url}}">
+	    <h2>{{contact.name}}</h2>
+	    <p>{{contact.timeago}}</p>
+	  </div>
+	  <div class="item item-body">
+	    <!-- <img class="full-image" ng-src="{{contact.img_url}}"> -->
+	    <p> {{contact.tweet}} </p>
+<!-- 	    <p>
+	      <a href="#" class="subdued">1 Like</a>
+	      <a href="#" class="subdued">5 Comments</a>
+	    </p> -->
+	  </div>
+
+	  <div class="item tabs tabs-secondary tabs-icon-left">
+	   <!--  <a class="tab-item" href="#">
+	      <i class="icon ion-thumbsup"></i>
+	      Like
+	    </a>
+	    <a class="tab-item" href="#">
+	      <i class="icon ion-chatbox"></i>
+	      Comment
+	    </a>
+	    <a class="tab-item" href="#">
+	      <i class="icon ion-share"></i>
+	      Share
+	    </a> -->
+	      <p> <i class="icon ion-thumbsup"></i>  {{contact.tag}} beats <p>
+	  </div>
+	</span>
+	<span ng-show="contact.type=='producer'">
+		<div class="list card">
+			<div class="item">
+		    <h2>Video</h2>
+		    <p>Produced By {{contact.username}}</p>
+		    </div>
+			  <div class="item item-body">
+				<span ng-bind-html="contact.link"></span>
+			  </div>
+		</div>
+	</span>
+<!-- 	<div class="list">
 		<div ng-repeat="contact in contacts | filter:search" class="item item-avatar">
 		  <img ng-src="{{contact.img_url}}" alt="">
 		  <h2>{{contact.email}}</h2>
@@ -25,5 +71,5 @@
 		     	{{contact.timeago}}
 		    </span>
 		</div>
-	</div>
+	</div> -->
 </content>
