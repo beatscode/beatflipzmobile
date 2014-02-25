@@ -1,11 +1,14 @@
 {
-	"name": "beatflipz",
-	"version": "0.1.0",
-	"dependencies": {
-		"ionic": "latest"
-	},
-	"devDependencies": {
-		"angular-mocks": "1.2.6",
-		"angular-scenario": "1.2.6"
-	}
+  "name": "beatflipz",
+  "version": "0.1.0",
+  "dependencies": {
+    "ionic": "latest"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.2.6",
+    "angular-scenario": "1.2.6"
+  },
+  "resolutions": {
+    "angular": "1.2.10"
+  }
 }

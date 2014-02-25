@@ -281,7 +281,7 @@ module.exports = function (grunt) {
       ionic_css: {
         expand: true,
         cwd: '<%= yeoman.app %>/bower_components/ionic',
-        src: ['dist/css/ionic.min.css', 'dist/fonts/*'],
+        src: ['release/css/ionic.min.css', 'release/fonts/*'],
         dest: '<%= yeoman.app %>/styles/ionic'
       }
     },
@@ -355,14 +355,7 @@ module.exports = function (grunt) {
         files: {
           '<%= yeoman.app %>/scripts/libraries.js': [
             '<%= yeoman.app %>/bower_components/fastclick/lib/fastclick.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/ionic.min.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-animate.min.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-route.min.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-touch.min.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular/angular-sanitize.min.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/angular-ui/angular-ui-router.min.js',
-            '<%= yeoman.app %>/bower_components/ionic/dist/js/ionic-angular.min.js',
+            '<%= yeoman.app %>/bower_components/ionic/release/js/ionic.bundle.min.js',
           ]
         }
       }
