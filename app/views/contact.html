@@ -15,7 +15,7 @@
 	    <button class="button button-small" ng-click="search=''">Cancel</button>
     </div> 		
 </div>
-<content has-header="true" has-footer="false" padded="true">
+<ion-content has-header="true" has-footer="false" padded="true">
 	
     <div class="list card" ng-repeat="contact in contacts | filter:search" >
     <span ng-show="contact.type == 'artist'">
@@ -72,4 +72,4 @@
 		    </span>
 		</div>
 	</div> -->
-</content>
+</ion-content>

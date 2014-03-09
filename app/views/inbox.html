@@ -1,0 +1,32 @@
+<div class="bar bar-header bar-dark" >
+	<span class="background_header">	
+    <a href="#/home" class="button button-positive"><i class="icon ion-ios7-arrow-back"></i> Menu</a>
+  		<h1 class="title" style="margin-top:-9px;">  <img src="images/ic_launcher.png" style="left:0px;top:15px;position:relative;"
+	  alt="">&nbsp;Inbox</h1>
+	<button class="button button-positive" ng-click="showSearch=!showSearch"><i class="icon ion-search"></i></button>
+	</span>
+</div>
+ <div class="bar bar-subheader bar-dark" ng-show="showSearch">
+ 		<div class="item item-input-inset" ng-show="showSearch">
+	    <label class="item-input-wrapper">
+	      <input type="text" ng-model="search" id="" placeholder="Search...">
+	   	</label>
+	    <button class="button button-small" ng-click="search=''">Cancel</button>
+    </div> 		
+</div>
+<ion-content has-header="true" has-footer="false" padded="true">
+
+<div class="list">
+
+    <a ng-repeat="s in submissions | filter:search" class="item" ng-click="loadSubmission(s)">  
+	    <h2>{{s.username}} 
+	    	<p>{{s.tracks.length}} Tracks</p>
+	    </h2>	      
+	    <p>{{s.message.substring(0,50)}}... </p>
+	    <span class="item-note">
+	        {{s.relative_date}}
+	    </span>
+    </a>
+</div>
+
+</ion-content>

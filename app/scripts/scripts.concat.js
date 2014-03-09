@@ -1,15 +1,16 @@
 'use strict';
 // Declare app level module which depends on filters, and services
 angular.module('beatflipzApp', [
+	'ionic',
 	'ngRoute',
-	'ngTouch',
-	'ngSanitize',
+	//'ngTouch',
+	//'ngSanitize',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
-	'ionic'
+
 ]).
 run(function () {
-	FastClick.attach(document.body);
+	//FastClick.attach(document.body);
 }).
 config(['$routeProvider', '$httpProvider', '$sceProvider',
 	function ($routeProvider, $httpProvider, $sceProvider) {
@@ -29,7 +30,10 @@ config(['$routeProvider', '$httpProvider', '$sceProvider',
 			templateUrl: 'views/home.html',
 			controller: 'HomeCtrl'
 		});
-
+		$routeProvider.when('/submission', {
+			templateUrl: 'views/submission.html',
+			controller: 'SubmissionCtrl'
+		});
 		$routeProvider.when('/tags', {
 			templateUrl: 'views/tag.html',
 			controller: 'TagCtrl'
@@ -62,10 +66,9 @@ angular.module('beatflipzApp.controllers', [])
 			$scope.back = function () {
 				console.log("back");
 			};
-
 			$scope.next = function () {
 				console.log("next");
-			}
+			};
 		}
 	])
 	.controller('HomeCtrl', ['$scope', 'environment', 'userService', '$location',
@@ -75,11 +78,25 @@ angular.module('beatflipzApp.controllers', [])
 			if (userService.attempt() === false) {
 				$location.path('/register');
 			}
-
 		}
-	]).controller('TagCtrl', ['$scope', 'environment', '$rootScope', 'tagService', 'userService', '$location',
-		function ($scope, environment, $rootScope, tagService, userService, $location) {
-			$scope.sTags = {};
+	])
+	.controller('SubmissionCtrl', ['$scope', 'environment', 'userService', '$location', '$rootScope',
+
+		function ($scope, environment, userService, $location, $rootScope) {
+
+			//Check whether user object exists
+			if (userService.attempt() === false || $rootScope.hasOwnProperty('selectedSubmission') == false) {
+				$location.path('/inbox');
+			}
+
+			$scope.init = (function () {
+				$scope.submission = $rootScope.selectedSubmission;
+				console.log($scope.submission);
+			})();
+
+			$scope.play = function (track) {
+				window.console.log(track);
+			}
 		}
 	])
 	.controller('TagCtrl', ['$scope', 'environment', '$rootScope', 'tagService', 'userService', '$location',
@@ -157,9 +174,26 @@ angular.module('beatflipzApp.controllers', [])
 
 		}
 	])
-	.controller('InboxCtrl', ['$scope', 'environment',
-		function ($scope, environment) {
+	.controller('InboxCtrl', ['$scope', 'environment', 'inboxService', 'userService', '$rootScope', '$location',
+		function ($scope, environment, inboxService, userService, $rootScope, $location) {
+			$scope.init = (function () {
+				//Check whether user object exists
+				if (userService.attempt() === false) {
+					$location.path('/register');
+					return;
+				}
+				inboxService.getInbox($rootScope.user.user.id).then(function (data) {
+					$scope.submissions = data;
+				}, function (err) {
+					alert(err);
+				});
+			})();
 
+
+			$scope.loadSubmission = function (s) {
+				$rootScope.selectedSubmission = s;
+				$location.path('submission');
+			}
 		}
 	])
 	.controller('LoginCtrl', ['$scope', 'environment', '$http', '$location', '$rootScope', 'userService',
@@ -178,7 +212,7 @@ angular.module('beatflipzApp.controllers', [])
 
 			$scope.init = (function () {
 
-				if (userService.attempt()) {
+				if (userService.attempt() == true) {
 					$location.path("/contacts");
 				}
 				$scope.error = false;
@@ -479,7 +513,7 @@ angular.module('beatflipzApp.services', [])
 							if (data.hasOwnProperty('error')) {
 								deferred.reject(data.error);
 							} else {
-								console.log(data)
+
 								$rootScope.user = data;
 								window.localStorage.setItem('user', angular.toJson(data));
 								deferred.resolve(data);
@@ -515,12 +549,16 @@ angular.module('beatflipzApp.services', [])
 			self.attempt = function () {
 				var result = false;
 				var localUser = window.localStorage.getItem('user');
+
 				if (!$rootScope.user && !localUser) {
 					result = false;
 				} else {
 					$rootScope.user = angular.fromJson(localUser);
-					console.log($rootScope.user);
-					result = true;
+					if ($rootScope.user.hasOwnProperty('user') === false) {
+						result = false;
+					} else {
+						result = true;
+					}
 				}
 				return result;
 			};
@@ -537,11 +575,46 @@ angular.module('beatflipzApp.services', [])
 				}
 			};
 		}
+	]).service('inboxService', ['$rootScope', '$http', '$q', 'environment',
+
+		function ($rootScope, $http, $q, environment) {
+
+			var self = this;
+			this.getInbox = function (id) {
+
+				var deferred = $q.defer();
+
+				var postString = "user_id=" + id;
+
+				$http.post(environment.api + '/mobile/getInbox', postString)
+					.success(function (data, status, headers, config) {
+
+						if (data) {
+							deferred.resolve(angular.fromJson(data));
+						} else {
+							deferred.reject("Data was rejected");
+						}
+					})
+					.error(function (data, status, headers, config) {
+						console.log(data);
+						deferred.reject('Invalid Authentication');
+					});
+
+				return deferred.promise;
+			};
+
+			return {
+				'getInbox': function (id) {
+					return self.getInbox(id);
+				}
+			};
+
+		}
 	])
 	.service('environment', [
 
 		function () {
-			var test = false;
+			var test = true;
 			return {
 				'api': (test) ? 'http://app.cassbeats.dev' : 'http://app.cassbeats.com',
 				/**

@@ -317,7 +317,7 @@ module.exports = function (grunt) {
     uglify: {
       dev: {
         files: {
-          '<%= yeoman.dist %>/scripts/scripts.js': [
+          '<%= yeoman.dist %>/scripts/scripts.concat.js': [
             '<%= yeoman.app %>/scripts/scripts.js'
           ]
         }
@@ -333,7 +333,7 @@ module.exports = function (grunt) {
     concat: {
       dev: {
         files: {
-          '<%= yeoman.app %>/scripts/scripts.js': [
+          '<%= yeoman.app %>/scripts/scripts.concat.js': [
             '<%= yeoman.app %>/scripts/app.js',
             '<%= yeoman.app %>/scripts/controllers/*.js',
             '<%= yeoman.app %>/scripts/filters/*.js',
@@ -354,8 +354,9 @@ module.exports = function (grunt) {
       libraries: {
         files: {
           '<%= yeoman.app %>/scripts/libraries.js': [
-            '<%= yeoman.app %>/bower_components/fastclick/lib/fastclick.js',
-            '<%= yeoman.app %>/bower_components/ionic/release/js/ionic.bundle.min.js',
+            // '<%= yeoman.app %>/bower_components/fastclick/lib/fastclick.js',
+            '<%= yeoman.app %>/bower_components/ionic/release/js/ionic.bundle.js',
+            '<%= yeoman.app %>/bower_components/angular-route/angular-route.min.js',
           ]
         }
       }
@@ -374,9 +375,7 @@ module.exports = function (grunt) {
         cmd: './android_splash.sh',
       },
       'ant_release': {
-        commands: {
-          exec: 'cd /Users/acasanova/projects/BeatFlipz/platforms/android && /usr/local/bin/ant release',
-        }
+        cmd: './buildandroidapk.sh'
       }
     }
   });

@@ -8,10 +8,9 @@ angular.module('beatflipzApp.controllers', [])
 			$scope.back = function () {
 				console.log("back");
 			};
-
 			$scope.next = function () {
 				console.log("next");
-			}
+			};
 		}
 	])
 	.controller('HomeCtrl', ['$scope', 'environment', 'userService', '$location',
@@ -21,7 +20,25 @@ angular.module('beatflipzApp.controllers', [])
 			if (userService.attempt() === false) {
 				$location.path('/register');
 			}
+		}
+	])
+	.controller('SubmissionCtrl', ['$scope', 'environment', 'userService', '$location', '$rootScope',
 
+		function ($scope, environment, userService, $location, $rootScope) {
+
+			//Check whether user object exists
+			if (userService.attempt() === false || $rootScope.hasOwnProperty('selectedSubmission') == false) {
+				$location.path('/inbox');
+			}
+
+			$scope.init = (function () {
+				$scope.submission = $rootScope.selectedSubmission;
+				console.log($scope.submission);
+			})();
+
+			$scope.play = function (track) {
+				window.console.log(track);
+			}
 		}
 	])
 	.controller('TagCtrl', ['$scope', 'environment', '$rootScope', 'tagService', 'userService', '$location',
@@ -99,9 +116,26 @@ angular.module('beatflipzApp.controllers', [])
 
 		}
 	])
-	.controller('BeatFlipzAdCtrl', ['$scope', 'environment',
-		function ($scope, environment) {
+	.controller('InboxCtrl', ['$scope', 'environment', 'inboxService', 'userService', '$rootScope', '$location',
+		function ($scope, environment, inboxService, userService, $rootScope, $location) {
+			$scope.init = (function () {
+				//Check whether user object exists
+				if (userService.attempt() === false) {
+					$location.path('/register');
+					return;
+				}
+				inboxService.getInbox($rootScope.user.user.id).then(function (data) {
+					$scope.submissions = data;
+				}, function (err) {
+					alert(err);
+				});
+			})();
 
+
+			$scope.loadSubmission = function (s) {
+				$rootScope.selectedSubmission = s;
+				$location.path('submission');
+			}
 		}
 	])
 	.controller('LoginCtrl', ['$scope', 'environment', '$http', '$location', '$rootScope', 'userService',
@@ -120,7 +154,7 @@ angular.module('beatflipzApp.controllers', [])
 
 			$scope.init = (function () {
 
-				if (userService.attempt()) {
+				if (userService.attempt() == true) {
 					$location.path("/contacts");
 				}
 				$scope.error = false;

@@ -11,18 +11,21 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'app/bower_components/ionic/dist/js/ionic.js',
-      'app/bower_components/ionic/dist/js/angular/angular.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/bower_components/fastclick/lib/fastclick.js',
-      'app/bower_components/ionic/dist/js/angular/angular-animate.min.js',
+      // 'app/bower_components/ionic/dist/js/ionic.js',
+      //  'app/bower_components/ionic/dist/js/angular/angular.js',
+
+      // 'app/bower_components/fastclick/lib/fastclick.js',
+      // 'app/bower_components/ionic/dist/js/angular/angular-animate.min.js',
       //'app/bower_components/ionic/dist/js/angular/angular-resource.js',
       //'app/bower_components/ionic/dist/js/angular/angular-cookies.js',
-      'app/bower_components/ionic/dist/js/angular/angular-sanitize.js',
+      // 'app/bower_components/ionic/dist/js/angular/angular-sanitize.js',
       'app/bower_components/ionic/dist/js/angular/angular-route.js',
-      'app/bower_components/ionic/dist/js/angular/angular-touch.js',
-      'app/bower_components/ionic/dist/js/angular-ui/angular-ui-router.min.js',
-      'app/bower_components/ionic/dist/js/ionic-angular.min.js',
+      // 'app/bower_components/ionic/dist/js/angular/angular-touch.js',
+      // 'app/bower_components/ionic/dist/js/angular-ui/angular-ui-router.min.js',
+      // 'app/bower_components/ionic/dist/js/ionic-angular.min.js',
+      'app/bower_components/ionic/release/js/ionic.bundle.js',
+
+      'app/bower_components/angular-mocks/angular-mocks.js',
 
       'app/scripts/scripts.js',
       'test/mock/**/*.js',

@@ -1,15 +1,16 @@
 'use strict';
 // Declare app level module which depends on filters, and services
 angular.module('beatflipzApp', [
+	'ionic',
 	'ngRoute',
-	'ngTouch',
-	'ngSanitize',
+	//'ngTouch',
+	//'ngSanitize',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
-	'ionic'
+
 ]).
 run(function () {
-	FastClick.attach(document.body);
+	//FastClick.attach(document.body);
 }).
 config(['$routeProvider', '$httpProvider', '$sceProvider',
 	function ($routeProvider, $httpProvider, $sceProvider) {
@@ -29,7 +30,10 @@ config(['$routeProvider', '$httpProvider', '$sceProvider',
 			templateUrl: 'views/home.html',
 			controller: 'HomeCtrl'
 		});
-
+		$routeProvider.when('/submission', {
+			templateUrl: 'views/submission.html',
+			controller: 'SubmissionCtrl'
+		});
 		$routeProvider.when('/tags', {
 			templateUrl: 'views/tag.html',
 			controller: 'TagCtrl'
@@ -37,6 +41,10 @@ config(['$routeProvider', '$httpProvider', '$sceProvider',
 		$routeProvider.when('/beatflipzad', {
 			templateUrl: 'views/beatflipzadvertisement.html',
 			controller: 'BeatFlipzAdCtrl'
+		});
+		$routeProvider.when('/inbox', {
+			templateUrl: 'views/inbox.html',
+			controller: 'InboxCtrl'
 		});
 		$routeProvider.otherwise({
 			redirectTo: '/register'
