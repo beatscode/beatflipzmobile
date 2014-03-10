@@ -9,7 +9,7 @@ angular.module('beatflipzApp', [
 	'ionic'
 ]).
 run(function () {
-	FastClick.attach(document.body);
+	//FastClick.attach(document.body);
 }).
 config(['$routeProvider', '$httpProvider', '$sceProvider',
 	function ($routeProvider, $httpProvider, $sceProvider) {
@@ -29,7 +29,6 @@ config(['$routeProvider', '$httpProvider', '$sceProvider',
 			templateUrl: 'views/home.html',
 			controller: 'HomeCtrl'
 		});
-
 		$routeProvider.when('/tags', {
 			templateUrl: 'views/tag.html',
 			controller: 'TagCtrl'
@@ -45,8 +44,6 @@ config(['$routeProvider', '$httpProvider', '$sceProvider',
 		$routeProvider.otherwise({
 			redirectTo: '/register'
 		});
-
-
 		$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 		$sceProvider.enabled(false);

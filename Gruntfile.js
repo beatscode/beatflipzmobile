@@ -44,7 +44,7 @@ module.exports = function (grunt) {
       },
       minify: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        tasks: ['concat:dev', 'concat:libraries', 'uglify:dev', 'karma', 'copy:ionic_css']
+        tasks: ['concat:dev', 'concat:dist', 'concat:libraries', 'uglify:dev', 'karma', 'copy:ionic_css']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -324,7 +324,7 @@ module.exports = function (grunt) {
       },
       dist: {
         files: {
-          '<%= yeoman.dist %>/scripts/scripts.js': [
+          '<%= yeoman.dist %>/scripts/scripts.concat.js': [
             '<%= yeoman.app %>/scripts/scripts.js'
           ]
         }
@@ -356,7 +356,9 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/scripts/libraries.js': [
             // '<%= yeoman.app %>/bower_components/fastclick/lib/fastclick.js',
             '<%= yeoman.app %>/bower_components/ionic/release/js/ionic.bundle.js',
+            '<%= yeoman.app %>/bower_components/angular-touch/angular-touch.min.js',
             '<%= yeoman.app %>/bower_components/angular-route/angular-route.min.js',
+            '<%= yeoman.app %>/bower_components/soundmanager2/script/soundmanager2-jsmin.js',
           ]
         }
       }

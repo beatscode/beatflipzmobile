@@ -3,33 +3,37 @@
     <a href="#/inbox" class="button button-positive"><i class="icon ion-ios7-arrow-back"></i> Inbox</a>
   		<h1 class="title" style="margin-top:-9px;">  <img src="images/ic_launcher.png" style="left:0px;top:15px;position:relative;"
 	  alt="">&nbsp;Submission</h1>
-
 	</span>
 </div>
 
 <ion-content has-header="true">
-  <div class="item">
-   
+  <div class="item">   
     <h2> Producer {{submission.username}} sent {{submission.tracks.length}} track(s)</h2>
-    <p>{{submission.relative_date}}</p>
-     <span class="item-note">
-		{{submission.message}}... 
-     </span>
+    <p>Sent {{submission.relative_date}} <br>
+    	<a class="" ng-show="submission.twitter" href="{{getTwitter()}}"><i class="ion-social-twitter"></i></a></p>
+     <span class="item-note">  </span>
   </div>
-<div class="item item-divider">  
-    <p>email: {{submission.user_email}} | twitter: {{submission.user.twitter}}</p>
-</div>	
+  <div class="item item-text-wrap">
+  	{{submission.message}}... 
+  </div>
+	<div class="item item-divider">  
+	    <p>Email: {{submission.user_email}}</p>
+	</div>	
 </div>
 <div class="list">
     <div ng-repeat="track in submission.tracks" class="item item-icon-right">  
-	    <h2>{{track.name}}</h2>	  
-	    <p>    leasing: ${{track.leasing_price}} | exclusive : ${{track.exclusive_price}}</p>        
-
-	   <div class="button-bar bar-light">
+	    <h2 ng-class="nowplaying">{{track.name}} <br><span ng-show="track.nowplaying" class="nowplaying">{{track.nowplaying}}</span></h2>	  
+	    <p>leasing: ${{track.leasing_price}} | exclusive : ${{track.exclusive_price}}</p>        
+	    <div class="button-bar bar-light">
 		  <a class="button" ng-click="play(track)"> <i class="ion-play"></i> Play</a>
 		  <a class="button" ng-click="stop()"><i class="ion-stop"></i> Stop</a>
 		</div>
     </div>
 </div>
-
 </ion-content>
+
+<style>
+	.nowplaying{
+		color: #5ABFE0;
+	}
+</style>

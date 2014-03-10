@@ -256,7 +256,7 @@ angular.module('beatflipzApp.services', [])
 	.service('environment', [
 
 		function () {
-			var test = true;
+			var test = false;
 			return {
 				'api': (test) ? 'http://app.cassbeats.dev' : 'http://app.cassbeats.com',
 				/**

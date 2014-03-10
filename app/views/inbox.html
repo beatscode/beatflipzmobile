@@ -3,7 +3,6 @@
     <a href="#/home" class="button button-positive"><i class="icon ion-ios7-arrow-back"></i> Menu</a>
   		<h1 class="title" style="margin-top:-9px;">  <img src="images/ic_launcher.png" style="left:0px;top:15px;position:relative;"
 	  alt="">&nbsp;Inbox</h1>
-	<button class="button button-positive" ng-click="showSearch=!showSearch"><i class="icon ion-search"></i></button>
 	</span>
 </div>
  <div class="bar bar-subheader bar-dark" ng-show="showSearch">
@@ -17,7 +16,12 @@
 <ion-content has-header="true" has-footer="false" padded="true">
 
 <div class="list">
-
+	<ul ng-show="submissions.length == 0">
+		<li class="item">  
+		    <h2>No Unread Messages</h2>	      
+		    <span class="item-note"> </span>
+	    </li>
+	</ul>
     <a ng-repeat="s in submissions | filter:search" class="item" ng-click="loadSubmission(s)">  
 	    <h2>{{s.username}} 
 	    	<p>{{s.tracks.length}} Tracks</p>

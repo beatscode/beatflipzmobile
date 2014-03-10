@@ -3,11 +3,10 @@
 angular.module('beatflipzApp', [
 	'ionic',
 	'ngRoute',
-	//'ngTouch',
-	//'ngSanitize',
+	'ngTouch',
+	'ngSanitize',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
-
 ]).
 run(function () {
 	//FastClick.attach(document.body);
@@ -47,7 +46,7 @@ config(['$routeProvider', '$httpProvider', '$sceProvider',
 			controller: 'InboxCtrl'
 		});
 		$routeProvider.otherwise({
-			redirectTo: '/register'
+			redirectTo: '/login'
 		});
 
 
@@ -76,16 +75,23 @@ angular.module('beatflipzApp.controllers', [])
 
 			//Check whether user object exists
 			if (userService.attempt() === false) {
-				$location.path('/register');
+				$location.path('/login');
 			}
+
+
+		}
+	])
+	.controller('BeatFlipzAdCtrl', ['$scope', 'environment',
+		function ($scope, environment) {
+
 		}
 	])
 	.controller('SubmissionCtrl', ['$scope', 'environment', 'userService', '$location', '$rootScope',
 
 		function ($scope, environment, userService, $location, $rootScope) {
-
+			$scope.soundManager = false;
 			//Check whether user object exists
-			if (userService.attempt() === false || $rootScope.hasOwnProperty('selectedSubmission') == false) {
+			if (userService.attempt() === false || $rootScope.hasOwnProperty('selectedSubmission') === false) {
 				$location.path('/inbox');
 			}
 
@@ -94,8 +100,48 @@ angular.module('beatflipzApp.controllers', [])
 				console.log($scope.submission);
 			})();
 
+			$scope.getTwitter = function () {
+				if ($scope.submission.twitter.length < 1) {
+					return null;
+				}
+				var link;
+				if ($scope.submission.twitter.indexOf('http') > -1) {
+					link = $scope.submission.twitter
+				} else {
+					link = "https://twitter.com/" + $scope.submission.twitter;
+				}
+				return link;
+			};
+
 			$scope.play = function (track) {
-				window.console.log(track);
+				var track_index;
+				for (var i = $scope.submission.tracks.length - 1; i >= 0; i--) {
+					if (track.id == $scope.submission.tracks[i].id) {
+						$scope.submission.tracks[i].nowplaying = "Loading...";
+						track_index = i;
+					} else {
+						$scope.submission.tracks[i].nowplaying = false;
+					}
+				};
+				$scope.stop();
+
+				$scope.soundManager = soundManager.createSound({
+					id: track.id,
+					url: track.url,
+					autoLoad: true,
+					autoPlay: true,
+					onload: function () {
+						$scope.submission.tracks[track_index].nowplaying = "Now Playing";
+						$scope.$apply();
+					},
+					volume: 85
+				});
+			};
+
+			$scope.stop = function () {
+				if ($scope.soundManager) {
+					$scope.soundManager.stop();
+				}
 			}
 		}
 	])
@@ -168,7 +214,7 @@ angular.module('beatflipzApp.controllers', [])
 					$scope.getServerTags();
 					$scope.user = $rootScope.user.user;
 				} else {
-					$location.path('/');
+					$location.path('/login');
 				}
 			})();
 
@@ -179,7 +225,7 @@ angular.module('beatflipzApp.controllers', [])
 			$scope.init = (function () {
 				//Check whether user object exists
 				if (userService.attempt() === false) {
-					$location.path('/register');
+					$location.path('/login');
 					return;
 				}
 				inboxService.getInbox($rootScope.user.user.id).then(function (data) {
@@ -204,7 +250,7 @@ angular.module('beatflipzApp.controllers', [])
 				$scope.error = false;
 				userService.authenticate($scope.loginModel).then(
 					function (data) {
-						$location.path('/contacts');
+						$location.path('/home');
 					}, function (err) {
 						$scope.error = err;
 					});
@@ -213,7 +259,7 @@ angular.module('beatflipzApp.controllers', [])
 			$scope.init = (function () {
 
 				if (userService.attempt() == true) {
-					$location.path("/contacts");
+					$location.path("/home");
 				}
 				$scope.error = false;
 			})();
@@ -269,14 +315,12 @@ angular.module('beatflipzApp.controllers', [])
 		$scope.showSearch = false;
 
 		$scope.getContacts = function () {
-
 			contactService.refresh().then(
 				function (data) {
 					$scope.contacts = data;
 				}, function (err) {
 					alert(err);
 				});
-
 		};
 
 		$scope.renderIframe = function (iframe) {
@@ -614,7 +658,7 @@ angular.module('beatflipzApp.services', [])
 	.service('environment', [
 
 		function () {
-			var test = true;
+			var test = false;
 			return {
 				'api': (test) ? 'http://app.cassbeats.dev' : 'http://app.cassbeats.com',
 				/**

@@ -3,11 +3,10 @@
 angular.module('beatflipzApp', [
 	'ionic',
 	'ngRoute',
-	//'ngTouch',
-	//'ngSanitize',
+	'ngTouch',
+	'ngSanitize',
 	'beatflipzApp.services',
 	'beatflipzApp.controllers',
-
 ]).
 run(function () {
 	//FastClick.attach(document.body);
@@ -47,7 +46,7 @@ config(['$routeProvider', '$httpProvider', '$sceProvider',
 			controller: 'InboxCtrl'
 		});
 		$routeProvider.otherwise({
-			redirectTo: '/register'
+			redirectTo: '/login'
 		});
 
 
