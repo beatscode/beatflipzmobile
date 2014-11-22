@@ -10,10 +10,10 @@
 
 angular.module('beatflipzApp.services', [])
 	.service('contactService', ['$rootScope', 'environment', '$q', '$http',
-		function ($rootScope, environment, $q, $http) {
+		function($rootScope, environment, $q, $http) {
 
 			var self = this;
-			self.shuffle = function (array) {
+			self.shuffle = function(array) {
 				var currentIndex = array.length,
 					temporaryValue, randomIndex;
 
@@ -32,7 +32,7 @@ angular.module('beatflipzApp.services', [])
 
 				return array;
 			}
-			self.refresh = function () {
+			self.refresh = function() {
 				var post = "";
 				var deferred = $q.defer();
 
@@ -43,7 +43,7 @@ angular.module('beatflipzApp.services', [])
 					console.log('Get From localStorage');
 					deferred.resolve(contacts);
 				} else {
-					$http.post(environment.api + '/mobile/getcontacts', post).success(function (data) {
+					$http.post(environment.api + '/mobile/getcontacts', post).success(function(data) {
 						if (data) {
 							var artists = data.artists;
 							var producers = data.producers;
@@ -66,7 +66,7 @@ angular.module('beatflipzApp.services', [])
 			};
 
 			return {
-				refresh: function () {
+				refresh: function() {
 					return self.refresh();
 				}
 			};
@@ -75,107 +75,107 @@ angular.module('beatflipzApp.services', [])
 
 .service('tagService', ['$q', '$http', 'environment',
 
-	function ($q, $http, environment) {
+		function($q, $http, environment) {
 
-		var self = this;
+			var self = this;
 
-		self.refresh = function () {
-			var deferred = $q.defer();
-			$http.post(environment.api + '/mobile/getPopularTags', '').success(function (data) {
-				if (data) {
-					//Set Expiration 1 day in the future
-					var targetDate = new Date();
-					targetDate.setDate(targetDate.getDate() + 1);
-					console.log('Setting Local Stoage', targetDate.toString());
-					window.localStorage.setItem('tags-expirationtime', targetDate.getTime().toString());
-					var dataToStore = angular.toJson(data);
-					window.localStorage.setItem('tags', dataToStore);
-					deferred.resolve(data);
-				} else {
-					deferred.reject("Data was rejected");
-				}
-			});
-			return deferred.promise;
-		};
-
-		self.saveTags = function (id, tags) {
-			var deferred = $q.defer();
-			if (!id || tags.length === 0) {
-				deferred.reject("Could Not Save");
-			} else {
-				var post = "user_id=" + id + "&";
-				for (var i = tags.length - 1; i >= 0; i--) {
-					post += "tag[]=" + tags[i] + "&";
-				}
-				$http.post(environment.api + '/mobile/savetags', post).success(function (data) {
+			self.refresh = function() {
+				var deferred = $q.defer();
+				$http.post(environment.api + '/mobile/getPopularTags', '').success(function(data) {
 					if (data) {
+						//Set Expiration 1 day in the future
+						var targetDate = new Date();
+						targetDate.setDate(targetDate.getDate() + 1);
+						console.log('Setting Local Stoage', targetDate.toString());
+						window.localStorage.setItem('tags-expirationtime', targetDate.getTime().toString());
+						var dataToStore = angular.toJson(data);
+						window.localStorage.setItem('tags', dataToStore);
 						deferred.resolve(data);
 					} else {
 						deferred.reject("Data was rejected");
 					}
 				});
-			}
-			return deferred.promise;
-		};
+				return deferred.promise;
+			};
 
-		return {
-			refresh: function () {
-				return self.refresh();
-			},
-			saveTags: function (id, tags) {
-				return self.saveTags(id, tags);
-			}
-		};
-	}
-])
-	.service('userService', [
-		'$rootScope', '$http', '$q', 'environment',
-
-		function ($rootScope, $http, $q, environment) {
-
-			var self = this;
-
-			self.authenticate = function (loginObj) {
-
+			self.saveTags = function(id, tags) {
 				var deferred = $q.defer();
-
-				if (!loginObj.email || !loginObj.password) {
-					deferred.reject('Invalid Authentication');
-				}
-
-				var postString = "email=" + loginObj.email + "&password=" + loginObj.password;
-
-				$http.post(environment.api + '/mobile/login', postString)
-					.success(function (data, status, headers, config) {
-
+				if (!id || tags.length === 0) {
+					deferred.reject("Could Not Save");
+				} else {
+					var post = "user_id=" + id + "&";
+					for (var i = tags.length - 1; i >= 0; i--) {
+						post += "tag[]=" + tags[i] + "&";
+					}
+					$http.post(environment.api + '/mobile/savetags', post).success(function(data) {
 						if (data) {
-							if (data == 'false') {
-								data = [];
-							}
-							if (data.hasOwnProperty('error')) {
-								deferred.reject(data.error);
-							} else {
-
-								$rootScope.user = data;
-								window.localStorage.setItem('user', angular.toJson(data));
-								deferred.resolve(data);
-							}
+							deferred.resolve(data);
 						} else {
 							deferred.reject("Data was rejected");
 						}
-					})
-					.error(function (data, status, headers, config) {
-						console.log(data);
-						deferred.reject('Invalid Authentication');
 					});
-
+				}
 				return deferred.promise;
-			}
-			/**
-			 * Set user data inside localstorage
-			 * @param {[type]} data [description]
-			 */
-			self.setUser = function (data) {
+			};
+
+			return {
+				refresh: function() {
+					return self.refresh();
+				},
+				saveTags: function(id, tags) {
+					return self.saveTags(id, tags);
+				}
+			};
+		}
+	])
+	.service('userService', [
+		'$rootScope', '$http', '$q', 'environment',
+
+		function($rootScope, $http, $q, environment) {
+
+			var self = this;
+
+			self.authenticate = function(loginObj) {
+
+					var deferred = $q.defer();
+
+					if (!loginObj.email || !loginObj.password) {
+						deferred.reject('Invalid Authentication');
+					}
+
+					var postString = "email=" + loginObj.email + "&password=" + loginObj.password;
+
+					$http.post(environment.api + '/mobile/login', postString)
+						.success(function(data, status, headers, config) {
+
+							if (data) {
+								if (data == 'false') {
+									data = [];
+								}
+								if (data.hasOwnProperty('error')) {
+									deferred.reject(data.error);
+								} else {
+
+									$rootScope.user = data;
+									window.localStorage.setItem('user', angular.toJson(data));
+									deferred.resolve(data);
+								}
+							} else {
+								deferred.reject("Data was rejected");
+							}
+						})
+						.error(function(data, status, headers, config) {
+							console.log(data);
+							deferred.reject('Invalid Authentication');
+						});
+
+					return deferred.promise;
+				}
+				/**
+				 * Set user data inside localstorage
+				 * @param {[type]} data [description]
+				 */
+			self.setUser = function(data) {
 				if (data.hasOwnProperty('error')) {
 					return false;
 				}
@@ -188,7 +188,7 @@ angular.module('beatflipzApp.services', [])
 			 * model is available
 			 * @return {[type]} [description]
 			 */
-			self.attempt = function () {
+			self.attempt = function() {
 				var result = false;
 				var localUser = window.localStorage.getItem('user');
 
@@ -206,30 +206,30 @@ angular.module('beatflipzApp.services', [])
 			};
 
 			return {
-				'attempt': function () {
+				'attempt': function() {
 					return self.attempt();
 				},
-				'setUser': function (data) {
+				'setUser': function(data) {
 					return self.setUser(data);
 				},
-				'authenticate': function (data) {
+				'authenticate': function(data) {
 					return self.authenticate(data);
 				}
 			};
 		}
 	]).service('inboxService', ['$rootScope', '$http', '$q', 'environment',
 
-		function ($rootScope, $http, $q, environment) {
+		function($rootScope, $http, $q, environment) {
 
 			var self = this;
-			this.getInbox = function (id) {
+			this.getInbox = function(id) {
 
 				var deferred = $q.defer();
 
 				var postString = "user_id=" + id;
 
 				$http.post(environment.api + '/mobile/getInbox', postString)
-					.success(function (data, status, headers, config) {
+					.success(function(data, status, headers, config) {
 
 						if (data) {
 							deferred.resolve(angular.fromJson(data));
@@ -237,7 +237,7 @@ angular.module('beatflipzApp.services', [])
 							deferred.reject("Data was rejected");
 						}
 					})
-					.error(function (data, status, headers, config) {
+					.error(function(data, status, headers, config) {
 						console.log(data);
 						deferred.reject('Invalid Authentication');
 					});
@@ -246,7 +246,7 @@ angular.module('beatflipzApp.services', [])
 			};
 
 			return {
-				'getInbox': function (id) {
+				'getInbox': function(id) {
 					return self.getInbox(id);
 				}
 			};
@@ -255,16 +255,16 @@ angular.module('beatflipzApp.services', [])
 	])
 	.service('environment', [
 
-		function () {
+		function() {
 			var test = false;
 			return {
-				'api': (test) ? 'http://app.cassbeats.dev' : 'http://app.cassbeats.com',
+				'api': (test) ? 'http://app.cassbeats.dev/app' : 'http://www.beatflipz.com/app',
 				/**
 				 * Should refresh data if expiration date is less then current date
 				 * @param  {[type]} expiry_date_time [description]
 				 * @return {[type]}                  [description]
 				 */
-				shouldIRefreshData: function (expiry_date_time) {
+				shouldIRefreshData: function(expiry_date_time) {
 
 					var currentDate = new Date();
 					var expirydate = new Date(Number(expiry_date_time));

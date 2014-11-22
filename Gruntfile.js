@@ -7,7 +7,7 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
@@ -317,14 +317,14 @@ module.exports = function (grunt) {
     uglify: {
       dev: {
         files: {
-          '<%= yeoman.dist %>/scripts/scripts.concat.js': [
-            '<%= yeoman.app %>/scripts/scripts.js'
+          '<%= yeoman.app %>/scripts/scripts.js': [
+            '<%= yeoman.app %>/scripts/scripts.concat.js'
           ]
         }
       },
       dist: {
         files: {
-          '<%= yeoman.dist %>/scripts/scripts.concat.js': [
+          '<%= yeoman.dist %>/scripts/scripts.js': [
             '<%= yeoman.app %>/scripts/scripts.js'
           ]
         }
@@ -343,12 +343,7 @@ module.exports = function (grunt) {
       },
       dist: {
         files: {
-          '<%= yeoman.dist %>/scripts/scripts.js': [
-            '<%= yeoman.app %>/scripts/app.js',
-            '<%= yeoman.app %>/scripts/controllers/*.js',
-            '<%= yeoman.app %>/scripts/filters/*.js',
-            '<%= yeoman.app %>/scripts/services/*.js'
-          ]
+          // '<%= yeoman.dist %>/scripts/scripts.js': ['<%= yeoman.app %>/scripts/scripts.js']
         }
       },
       libraries: {
@@ -383,7 +378,7 @@ module.exports = function (grunt) {
   });
 
 
-  grunt.registerTask('serve', function (target) {
+  grunt.registerTask('serve', function(target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
@@ -398,7 +393,7 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('server', function () {
+  grunt.registerTask('server', function() {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve']);
   });

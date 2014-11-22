@@ -16,7 +16,7 @@
 			<p ng-show="user.type=='producer'">BeatFlipz will match you with artists based on your tags</p>
 		</div>
 		<div ng-repeat="tag in tags" class="item item-button-right">
-		  <h2>{{tag.tag | uppercase }}</h2>
+		  <h2>{{tag.tags | uppercase }}</h2>
 		  <p> {{tag.numemails}} artists <i class="icon ion-thumbsup"></i> {{tag.tag}} </p>
 	 		<!-- <label class="checkbox">
 	       		<input type="checkbox" name="tags" ng-model="sTags[tag.tag]" value="{{tag.tag}}" ng-true-value="true" ng-false-value="false">
