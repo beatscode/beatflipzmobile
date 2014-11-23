@@ -258,7 +258,7 @@ angular.module('beatflipzApp.services', [])
 		function() {
 			var test = false;
 			return {
-				'api': (test) ? 'http://app.cassbeats.dev/app' : 'http://www.beatflipz.com/app',
+				'api': (test) ? 'http://beatflipz.dev/app' : 'http://www.beatflipz.com/app',
 				/**
 				 * Should refresh data if expiration date is less then current date
 				 * @param  {[type]} expiry_date_time [description]

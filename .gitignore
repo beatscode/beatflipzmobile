@@ -9,3 +9,4 @@ platforms
 www
 !www/config.xml
 !www/res
+info.txt

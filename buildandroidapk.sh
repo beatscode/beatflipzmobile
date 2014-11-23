@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/bash
 
-cd ./platforms/android && ant release;
-adb -d install -r ./ant-build/BeatFlipz-release.apk
+cd platforms/android/;
+#pwd;
+ant release;
+adb -d install -r bin/BeatFlipz-release.apk
